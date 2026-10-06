@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic Citoyen & Participation Électorale 2026 🗳️📊 | INSEA & DGCT</title>
+    
+    <!-- Meta tags for research / academic study -->
+    <meta name="description" content="Enquête interactive et gamifiée sur la participation électorale aux législatives marocaines de 2026, réalisée par l'INSEA pour la DGCT.">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        forest: {
+                            950: '#06140d',
+                            900: '#0b1a12',
+                            850: '#12281d',
+                            800: '#1d3e2e',
+                            700: '#2e5c45'
+                        },
+                        emerald: {
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            mint: '#a7f3d0'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Custom Dark Forest Green & Emerald CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-[#06140d] text-slate-100 min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
+
+    <!-- Background Canvas and Emerald Ambient Glow -->
+    <div class="bg-mesh"></div>
+    <canvas id="bg-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- Top Navigation & Stage Header -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-[#06140d]/90 border-b border-emerald-900/40 px-3 sm:px-8 py-2.5">
+        <div class="max-w-5xl mx-auto flex items-center justify-between gap-3 sm:gap-4">
+            <!-- Institutional Header & Brand -->
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-600/30 border border-emerald-400/30">
+                    <span class="text-base font-bold font-mono text-white">🗳️</span>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm sm:text-base leading-tight bg-gradient-to-r from-white via-emerald-100 to-emerald-300 bg-clip-text text-transparent">
+                        Diagnostic Citoyen 2026
+                    </h1>
+                    <p class="text-[10px] text-emerald-300/70 font-mono hidden sm:block">INSEA Rabat · Module Enquêtes Statistiques · Simulation DGCT</p>
+                </div>
+            </div>
+
+            <!-- Gamified Stage Stepper (Shown during questionnaire) -->
+            <div id="progress-bar-container" class="hidden flex-1 max-w-sm sm:max-w-md mx-2 sm:mx-4 flex flex-col gap-1.5">
+                <!-- 5-Step Stage Pills -->
+                <div id="stage-stepper" class="flex items-center justify-between gap-1 overflow-x-auto py-0.5">
+                    <span class="step-pill px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-slate-950 shadow-sm" data-stage="profil">1. Profil 👤</span>
+                    <span class="step-pill px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#12281d] text-emerald-300/70 border border-emerald-800/40" data-stage="terrain">2. Terrain 🗺️</span>
+                    <span class="step-pill px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#12281d] text-emerald-300/70 border border-emerald-800/40" data-stage="choix">3. Choix 🗳️</span>
+                    <span class="step-pill px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#12281d] text-emerald-300/70 border border-emerald-800/40" data-stage="perceptions">4. Idées 💡</span>
+                </div>
+                <!-- Continuous progress line -->
+                <div class="w-full h-1.5 bg-[#0b1a12] rounded-full overflow-hidden border border-emerald-800/40 progress-glow">
+                    <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-emerald-600 via-teal-400 to-emerald-300 transition-all duration-300 ease-out" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Header Audio & Accessibility Controls -->
+            <div class="flex items-center gap-2">
+                <button id="sound-toggle-btn" class="p-2 rounded-xl bg-[#12281d] border border-emerald-800/60 hover:bg-[#1a3829] transition-all text-emerald-200" title="Activer / Désactiver les effets sonores">
+                    <div id="sound-icon">
+                        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"></path></svg>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 flex items-center justify-center p-4 sm:p-6 relative z-10">
+
+        <!-- ========================================== -->
+        <!-- 1. HERO SCREEN                             -->
+        <!-- ========================================== -->
+        <section id="hero-screen" class="max-w-3xl w-full mx-auto py-6 sm:py-10">
+            <div class="glass-card rounded-3xl p-6 sm:p-10 text-center relative overflow-hidden border border-emerald-500/25 shadow-2xl">
+                <!-- Ambient Glow Orbs -->
+                <div class="absolute -top-24 -left-24 w-80 h-80 bg-emerald-500/12 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -right-24 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <!-- Academic & Public Badge -->
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-6">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>Projet Académique INSEA · Simulation pour la DGCT</span>
+                </div>
+
+                <!-- Title -->
+                <h2 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+                    Quel citoyen êtes-vous ?<br>
+                    <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-200 bg-clip-text text-transparent">
+                        Le grand test électoral 2026 🗳️📊
+                    </span>
+                </h2>
+
+                <!-- Subtitle (Grand Public) -->
+                <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto mb-8 font-light leading-relaxed">
+                    « Prenez 3 minutes pour donner votre avis sur les élections législatives du 23 septembre 2026. Découvrez votre profil citoyen personnalisé et aidez les étudiants de l'INSEA à faire progresser les politiques publiques ! »
+                </p>
+
+                <!-- Academic & Trust Badges -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto mb-8">
+                    <div class="bg-[#0b1a12]/80 border border-emerald-800/50 rounded-xl p-3 flex flex-col items-center justify-center gap-1 shadow-sm">
+                        <span class="text-emerald-400 text-lg">🔒</span>
+                        <span class="text-xs font-semibold text-slate-100">100% Anonyme</span>
+                        <span class="text-[10px] text-emerald-300/70 font-mono">Secret garanti</span>
+                    </div>
+                    <div class="bg-[#0b1a12]/80 border border-emerald-800/50 rounded-xl p-3 flex flex-col items-center justify-center gap-1 shadow-sm">
+                        <span class="text-teal-400 text-lg">⏱️</span>
+                        <span class="text-xs font-semibold text-slate-100">3 à 4 Minutes</span>
+                        <span class="text-[10px] text-emerald-300/70 font-mono">Fluide & Direct</span>
+                    </div>
+                    <div class="bg-[#0b1a12]/80 border border-emerald-800/50 rounded-xl p-3 flex flex-col items-center justify-center gap-1 shadow-sm">
+                        <span class="text-emerald-300 text-lg">🎯</span>
+                        <span class="text-xs font-semibold text-slate-100">Sans Parti-Pris</span>
+                        <span class="text-[10px] text-emerald-300/70 font-mono">Zéro choix partisan</span>
+                    </div>
+                    <div class="bg-[#0b1a12]/80 border border-emerald-800/50 rounded-xl p-3 flex flex-col items-center justify-center gap-1 shadow-sm">
+                        <span class="text-cyan-400 text-lg">🎉</span>
+                        <span class="text-xs font-semibold text-slate-100">Profil Personnalisé</span>
+                        <span class="text-[10px] text-emerald-300/70 font-mono">Badge & Analyse</span>
+                    </div>
+                </div>
+
+                <!-- Double Reading Level Banner -->
+                <div class="code-box max-w-xl mx-auto mb-8 text-center text-xs py-2.5">
+                    <code>💡 Conçu pour tous : citoyens, familles, étudiants & profs !</code>
+                </div>
+
+                <!-- CTA Button -->
+                <button id="btn-start-survey" class="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 text-white font-bold text-base sm:text-lg shadow-xl shadow-emerald-600/30 hover:shadow-emerald-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                    <span>Lancer mon Diagnostic Citoyen [ Start ]</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                </button>
+
+                <div class="mt-4 text-xs text-emerald-300/70 font-mono">
+                    Navigation tactile ou clavier (Touches <kbd class="px-1.5 py-0.5 rounded bg-[#12281d] border border-emerald-700/60 text-emerald-200">1..9</kbd> et <kbd class="px-1.5 py-0.5 rounded bg-[#12281d] border border-emerald-700/60 text-emerald-200">Entrée ↵</kbd>)
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 2. QUESTION SCREEN (Dynamic Engine)        -->
+        <!-- ========================================== -->
+        <section id="question-screen" class="hidden max-w-3xl w-full mx-auto py-4">
+            <div id="question-card" class="glass-card rounded-3xl p-6 sm:p-8 max-w-3xl w-full mx-auto relative border border-emerald-500/20 shadow-2xl">
+                
+                <!-- Block Badge Header -->
+                <div id="block-badge" class="mb-3">
+                    <!-- Injected dynamically -->
+                </div>
+
+                <!-- Question Header -->
+                <h3 id="question-title" class="text-xl sm:text-2xl font-bold text-white mb-1.5 tracking-tight">
+                    <!-- Dynamic Title -->
+                </h3>
+                <p id="question-subtitle" class="text-xs sm:text-sm text-emerald-200/80 mb-5 font-normal">
+                    <!-- Dynamic Subtitle -->
+                </p>
+
+                <!-- Dynamic Controls Mount Point -->
+                <div id="question-content" class="min-h-[200px] flex flex-col justify-center">
+                    <!-- Controls dynamically injected -->
+                </div>
+
+                <!-- Commentary / Feedback Bubble -->
+                <div id="commentary-box" class="hidden mt-4 commentary-bubble rounded-xl p-3.5 flex items-start gap-3 border border-emerald-500/30">
+                    <span class="text-lg flex-shrink-0">💬</span>
+                    <p id="commentary-text" class="text-xs sm:text-sm text-emerald-200 font-medium leading-relaxed">
+                        <!-- Dynamic insight text -->
+                    </p>
+                </div>
+
+                <!-- Navigation Bar -->
+                <div class="flex items-center justify-between mt-8 pt-5 border-t border-emerald-900/50">
+                    <!-- Back Button -->
+                    <button id="btn-back" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#12281d] hover:bg-[#1a3829] text-emerald-200 text-xs sm:text-sm font-semibold transition-all border border-emerald-800/60">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"></path></svg>
+                        <span>Retour [ ← ]</span>
+                    </button>
+
+                    <!-- Keyboard Helper -->
+                    <div class="hidden sm:flex items-center gap-1.5 text-[11px] font-mono text-emerald-400/60">
+                        <span>Sélection :</span>
+                        <kbd class="px-1.5 py-0.5 rounded bg-[#12281d] border border-emerald-800/60 text-emerald-300">1..9</kbd>
+                    </div>
+
+                    <!-- Next Button -->
+                    <button id="btn-next" type="button" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold shadow-lg shadow-emerald-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                        <span id="btn-next-text">Suivant [ Entrée ↵ ]</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 3. OUTRO SCREEN (The Citizen Reward)       -->
+        <!-- ========================================== -->
+        <section id="outro-screen" class="hidden max-w-4xl w-full mx-auto py-6">
+            <div class="glass-card rounded-3xl p-6 sm:p-10 border border-emerald-500/30 shadow-2xl relative">
+                
+                <!-- Outro Header -->
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 mx-auto flex items-center justify-center shadow-lg shadow-emerald-500/40 mb-4 animate-bounce">
+                        <span class="text-3xl">🎉</span>
+                    </div>
+                    <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                        Diagnostic Terminé · 100% Anonyme
+                    </span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold text-white mt-3 mb-2">
+                        Voici votre Profil Citoyen ! 🌟
+                    </h2>
+                    <p class="text-sm sm:text-base text-slate-300 max-w-lg mx-auto font-light">
+                        Merci infiniment pour votre temps. Vos réponses contribuent directement à la recherche universitaire à l'INSEA pour la DGCT.
+                    </p>
+                </div>
+
+                <!-- Two-Column Cards: Citizen Profile & Pedagogical Impact -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+                    
+                    <!-- Card 1: Citizen Profile Badge -->
+                    <div class="bg-gradient-to-br from-[#0b1a12] via-[#12281d] to-[#08160f] border border-emerald-500/30 rounded-2xl p-5 flex flex-col justify-between shadow-md">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">Votre Profil d'Électeur</span>
+                                <span id="profile-badge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Civisme</span>
+                            </div>
+                            <h3 id="profile-title" class="text-xl font-bold text-white mb-1">Le Citoyen Engagé & Éclairé 🏛️</h3>
+                            <p id="profile-subtitle" class="text-xs text-emerald-300/80 mb-4 font-mono">Participation active et confiance institutionnelle</p>
+                            <p id="profile-quote" class="text-xs sm:text-sm text-slate-300 italic border-l-2 border-emerald-400 pl-3 py-1 leading-relaxed">
+                                « Voter est à la fois un devoir civique et un outil d'orientation démocratique de l'action publique. »
+                            </p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-emerald-900/50 flex items-center justify-between text-xs text-emerald-300/70 font-mono">
+                            <span>Échantillon : Législatives 2026</span>
+                            <span class="text-emerald-400 font-bold">Badge Confirmé</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Le Saviez-Vous ? (Impact Pédagogique) -->
+                    <div class="bg-[#0b1a12] border border-emerald-800/60 rounded-2xl p-5 flex flex-col justify-between shadow-md">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">💡 Le Saviez-Vous ?</span>
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700/40">Impact Recherche</span>
+                            </div>
+                            
+                            <h4 class="text-base font-bold text-white mb-2">À quoi vont servir vos réponses ?</h4>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                                Grâce à vous, les étudiants de l'INSEA vont ajuster un <strong>modèle économétrique (GLM Logit)</strong> pour identifier les leviers qui encouragent réellement la participation citoyenne au Maroc : proximité des bureaux de vote, simplification pour les MRE, transparence des bilans et pédagogie publique.
+                            </p>
+
+                            <div class="bg-[#06140d] rounded-xl p-2.5 font-mono text-[11px] text-emerald-300/70 flex justify-between border border-emerald-900/40">
+                                <span>Estimation statistique :</span>
+                                <span id="stat-proba" class="text-emerald-300 font-bold">85% probabilité théorique</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-emerald-900/50 text-[10px] text-emerald-400/60 font-mono">
+                            Modélisation supervisée par le département d'Économétrie INSEA
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WhatsApp Share CTA Banner -->
+                <div class="p-5 rounded-2xl bg-gradient-to-r from-emerald-950/60 via-[#12281d] to-emerald-950/60 border border-emerald-500/40 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                    <div>
+                        <h4 class="text-base font-bold text-white flex items-center justify-center sm:justify-start gap-2">
+                            <span>📲 Invitez vos proches à tester leur profil !</span>
+                        </h4>
+                        <p class="text-xs text-emerald-200/80 mt-1">
+                            Partagez le questionnaire sur WhatsApp pour nous aider à obtenir un échantillon représentatif de toutes les générations.
+                        </p>
+                    </div>
+
+                    <button id="btn-share-whatsapp" type="button" class="btn-whatsapp inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl text-white font-bold text-xs sm:text-sm font-sans flex-shrink-0 shadow-lg">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                        <span>Partager sur WhatsApp</span>
+                    </button>
+                </div>
+
+                <!-- Observed Variables Summary -->
+                <div class="mb-8">
+                    <h4 class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider mb-3">
+                        Récapitulatif de Vos Réponses :
+                    </h4>
+                    <div id="summary-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        <!-- Summary cards generated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Export & Tooling Actions -->
+                <div class="p-5 rounded-2xl bg-[#0b1a12] border border-emerald-800/60 mb-6 shadow-md">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                        <div>
+                            <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                <span>Espace Données & Outils Statistiques</span>
+                            </h4>
+                            <p class="text-xs text-slate-400 mt-0.5">Téléchargez vos données ou le script de modélisation R.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <button id="btn-export-json" type="button" class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#12281d] hover:bg-[#1a3829] text-emerald-100 text-xs font-semibold font-mono border border-emerald-800/60 transition-all hover:border-emerald-400/50">
+                            <span>📥 Dataset JSON</span>
+                        </button>
+                        
+                        <button id="btn-export-csv" type="button" class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#12281d] hover:bg-[#1a3829] text-emerald-100 text-xs font-semibold font-mono border border-emerald-800/60 transition-all hover:border-emerald-400/50">
+                            <span>📊 Fichier CSV</span>
+                        </button>
+
+                        <button id="btn-export-r" type="button" class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-200 text-xs font-semibold font-mono border border-emerald-500/40 transition-all hover:shadow-lg hover:shadow-emerald-500/20">
+                            <span>📜 Script R (GLM & Margins)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Footer Restart / New Respondent CTA -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-emerald-900/50">
+                    <p class="text-xs text-emerald-400/60 font-mono text-center sm:text-left">
+                        Données protégées sous secret statistique & licence académique INSEA / DGCT.
+                    </p>
+
+                    <button id="btn-restart-survey" type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#12281d] hover:bg-[#1a3829] text-emerald-200 text-xs font-semibold transition-all border border-emerald-800/60">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        <span>Nouveau Répondant (Reset)</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Disclaimer -->
+    <footer class="py-4 text-center text-xs text-emerald-400/60 font-mono relative z-10 border-t border-emerald-900/30">
+        <p>INSEA Rabat · Département de Statistique & Économétrie · Diagnostic Citoyen Législatives 2026</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/audio.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/confetti.js"></script>
+    <script src="js/questions.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

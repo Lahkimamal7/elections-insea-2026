@@ -1,0 +1,340 @@
+/* ==============================================================================
+   DARK FOREST GREEN & EMERALD DESIGN SYSTEM (INSEA — ÉLECTIONS 2026)
+   Édition Gamifiée, Pédagogique & Grand Public
+   ============================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg-dark: #06140d;
+    --bg-surface: #0b1a12;
+    --card-bg: rgba(18, 40, 29, 0.82);
+    --card-border: rgba(46, 92, 69, 0.45);
+    --card-hover-border: rgba(52, 211, 153, 0.7);
+    
+    --emerald-primary: #10b981;
+    --emerald-light: #34d399;
+    --emerald-mint: #a7f3d0;
+    --emerald-glow: rgba(16, 185, 129, 0.35);
+    
+    --whatsapp-green: #25d366;
+    --rose-accent: #f43f5e;
+    --amber-accent: #f59e0b;
+    --cyan-accent: #06b6d4;
+    
+    --text-primary: #f3f4f6;
+    --text-muted: #9ca3af;
+    --text-mint: #a7f3d0;
+    
+    --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Background Radial Mesh in Emerald Green & Deep Forest tones */
+.bg-mesh {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    background: 
+        radial-gradient(circle at 18% 15%, rgba(16, 185, 129, 0.16) 0%, transparent 45%),
+        radial-gradient(circle at 82% 85%, rgba(5, 150, 105, 0.14) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(52, 211, 153, 0.05) 0%, transparent 65%);
+}
+
+/* Premium Forest Glassmorphism Card */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.6), 0 0 25px -2px rgba(16, 185, 129, 0.08);
+    transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+    border-color: rgba(52, 211, 153, 0.5);
+}
+
+/* Interactive Option Card in Forest Green */
+.option-card {
+    background: rgba(18, 40, 29, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(46, 92, 69, 0.5);
+    border-radius: 1.15rem;
+    padding: 1.15rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.option-card:hover {
+    background: rgba(26, 56, 41, 0.9);
+    border-color: rgba(52, 211, 153, 0.75);
+    transform: translateY(-2.5px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4), 0 0 18px rgba(16, 185, 129, 0.25);
+}
+
+.option-card.selected {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.22) 100%);
+    border-color: #34d399;
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.38), inset 0 0 15px rgba(16, 185, 129, 0.15);
+    transform: translateY(-2px) scale(1.01);
+}
+
+.option-card.selected.theme-rose {
+    background: linear-gradient(135deg, rgba(244, 63, 94, 0.28) 0%, rgba(225, 29, 72, 0.18) 100%);
+    border-color: #fb7185;
+    box-shadow: 0 0 25px rgba(244, 63, 94, 0.35);
+}
+
+.option-card.selected.theme-amber {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.18) 100%);
+    border-color: #fbbf24;
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.35);
+}
+
+/* Key Shortcut Badge (Emerald-tinted) */
+.key-badge {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.18rem 0.5rem;
+    border-radius: 0.4rem;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    color: var(--emerald-mint);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Sarcastic/Pedagogical Feedback Bubble */
+.commentary-bubble {
+    background: linear-gradient(135deg, rgba(18, 40, 29, 0.95) 0%, rgba(11, 26, 18, 0.98) 100%);
+    border-left: 3.5px solid #34d399;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(16, 185, 129, 0.12);
+    animation: fadeInSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Methodological Coin INSEA Accordion */
+.methodo-card {
+    background: rgba(11, 26, 18, 0.75);
+    border: 1px dashed rgba(52, 211, 153, 0.35);
+    border-radius: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.methodo-card:hover {
+    border-color: rgba(52, 211, 153, 0.6);
+    background: rgba(11, 26, 18, 0.9);
+}
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 5-Step Visual Progress Stepper */
+.step-item {
+    transition: all 0.25s ease;
+}
+
+.step-item.active .step-icon-box {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-color: #34d399;
+    box-shadow: 0 0 15px rgba(52, 211, 153, 0.6);
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+.step-item.completed .step-icon-box {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: #10b981;
+    color: #34d399;
+}
+
+/* Progress Bar Glowing Effect */
+.progress-glow {
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-glow::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(167, 243, 208, 0.8));
+    filter: blur(4px);
+}
+
+/* Custom Range Slider (Emerald Track & Glowing Thumb) */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: #12281d;
+    border: 1px solid rgba(46, 92, 69, 0.5);
+    outline: none;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+    border: 3px solid #06140d;
+    box-shadow: 0 0 18px rgba(52, 211, 153, 0.9);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 25px rgba(52, 211, 153, 1);
+}
+
+/* Star Rating & Visual Likert Buttons */
+.star-btn {
+    transition: all 0.22s ease;
+    cursor: pointer;
+}
+
+.star-btn:hover {
+    transform: scale(1.18);
+    filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.8));
+}
+
+.star-btn.active {
+    color: #34d399;
+    filter: drop-shadow(0 0 12px rgba(52, 211, 153, 0.7));
+}
+
+/* Math & Shortcut Chips */
+.math-chip {
+    font-family: var(--font-mono);
+    background: rgba(18, 40, 29, 0.7);
+    border: 1px solid rgba(52, 211, 153, 0.25);
+    color: var(--emerald-mint);
+    padding: 0.35rem 0.65rem;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.math-chip:hover {
+    background: rgba(16, 185, 129, 0.25);
+    border-color: #34d399;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+    transform: translateY(-1px);
+}
+
+/* WhatsApp Share Button Special Glow */
+.btn-whatsapp {
+    background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.35);
+    transition: all 0.22s ease;
+}
+
+.btn-whatsapp:hover {
+    box-shadow: 0 12px 25px rgba(37, 211, 102, 0.55);
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* Code & Teaser Boxes */
+.code-box {
+    font-family: var(--font-mono);
+    background: #08160f;
+    border: 1px solid rgba(46, 92, 69, 0.4);
+    border-radius: 0.75rem;
+    padding: 0.85rem 1rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--emerald-mint);
+    overflow-x: auto;
+}
+
+/* Screen Slide Transitions */
+.slide-in-right {
+    animation: slideInRight 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Custom Scrollbar in Dark Forest Theme */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #06140d;
+}
+::-webkit-scrollbar-thumb {
+    background: #1d3e2e;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #2e5c45;
+}
